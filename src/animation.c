@@ -29,6 +29,7 @@
  */
 
 #include "animation.h"
+#include "obstacle1.h"
 
 bool Animation_start(SDL_Renderer *renderer, int width, int height)
 {
@@ -36,8 +37,9 @@ bool Animation_start(SDL_Renderer *renderer, int width, int height)
     animation.renderer  = renderer;
     animation.width     = width;
     animation.height    = height;
+    animation.gameover  = false;
 
-    // Loat animation assets
+    // Load animation assets
     if(!Animation_load(&animation))
         return false;
 
@@ -55,7 +57,7 @@ bool Animation_start(SDL_Renderer *renderer, int width, int height)
     bool quit = false;
 
     // Event loop
-    while(!quit)
+    while(!quit && !animation.gameover)
     {
         SDL_Event e;
 
@@ -99,30 +101,93 @@ bool Animation_load(Animation *animation)
         return false;
 
     // Background move direction
-    animation->background.direction = DIRECTION_DOWN;
+    animation->background.direction = DIRECTION_LEFT;
 
     // Background speed in pixel/second
     animation->background.speed = OCEAN_SPEED;
 
-    if(!Plane_load(animation->renderer, &animation->plane, PLANE_IMG, PLANE_SHADOW))
+    if(!Plane_load(animation->renderer, &animation->plane, PLANE_IMG))
     {
         Background_destroy(&animation->background);
         return false;
     }
 
     animation->plane.margin = PLANE_MARGIN;
-    animation->plane.shadowOffset.x = PLANE_SHADOW_X;
-    animation->plane.shadowOffset.y = PLANE_SHADOW_Y;
+
 
     // Set plane initial position
-    Plane_setX(&animation->plane, (animation->width - animation->plane.image.rect.w) / 2); // Horiz. center
-    Plane_setY(&animation->plane, animation->height - animation->plane.image.rect.h - animation->plane.margin);
+    Plane_setX(&animation->plane, (animation->width - animation->plane.image.rect.w) / 7); // Horiz. center
+    Plane_setY(&animation->plane,  (animation->height - animation->plane.image.rect.h)* 94/100);
 
     // Plane move direction
     animation->plane.direction = DIRECTION_STOP;
 
     // Plane move speed in pixel/second
     animation->plane.speed = PLANE_SPEED;
+
+// SHOP OBSTACLE HERE********************************************************************************************
+
+    if(!Obstacle_load(animation->renderer, &animation->shop, SHOP_IMG))
+    {
+        Background_destroy(&animation->background);
+        return false;
+    }
+
+    animation->shop.margin = SHOP_MARGIN;
+
+
+    // Set shop initial position
+    Obstacle_setX(&animation->shop, (animation->width - animation->shop.image.rect.w)); // Horiz.
+    Obstacle_setY(&animation->shop,  (animation->height - animation->shop.image.rect.h) * 94/100);
+
+    // shop move direction
+    animation->shop.direction = DIRECTION_LEFT;
+
+    // shop move speed in pixel/second
+    animation->shop.speed = SHOP_SPEED;
+
+// TOWER OBSTACLE HERE*********************************************************************************************
+
+    if(!Obstacle_load(animation->renderer, &animation->tower, TOWER_IMG))
+    {
+        Background_destroy(&animation->background);
+        return false;
+    }
+
+    animation->tower.margin = TOWER_MARGIN;
+
+
+    // Set tower initial position
+    Obstacle_setX(&animation->tower, (animation->width - animation->tower.image.rect.w)*0.6); // Horiz.
+    Obstacle_setY(&animation->tower,  (animation->height - animation->tower.image.rect.h) * 94/100);
+
+    // tower move direction
+    animation->tower.direction = DIRECTION_LEFT;
+
+    // tower move speed in pixel/second
+    animation->tower.speed = TOWER_SPEED;
+
+// JET OBSTACLE HERE************************************************************************************************
+
+  if(!Obstacle_load(animation->renderer, &animation->jet, JET_IMG))
+    {
+        Background_destroy(&animation->background);
+        return false;
+    }
+
+    animation->jet.margin = JET_MARGIN;
+
+
+    // Set jet initial position
+    Obstacle_setX(&animation->jet, (animation->width - animation->jet.image.rect.w)*1.5); // Horiz.
+    Obstacle_setY(&animation->jet,  (animation->height - animation->jet.image.rect.h) * 30/100);
+
+    // jet move direction
+    animation->jet.direction = DIRECTION_LEFT;
+
+    // jet move speed in pixel/second
+    animation->jet.speed = JET_SPEED;
+
 
     return true;
 }
@@ -152,9 +217,8 @@ bool Animation_handleEvent(Animation *animation, SDL_Event *e)
 
         case SDLK_UP:
         case SDLK_DOWN:
-        case SDLK_RIGHT:
-        case SDLK_LEFT:
-            Plane_setDirection(&animation->plane, e->key.keysym.sym);
+
+           Plane_setDirection(&animation->plane, e->key.keysym.sym);
             break;
         }
     }
@@ -163,9 +227,9 @@ bool Animation_handleEvent(Animation *animation, SDL_Event *e)
         switch (e->key.keysym.sym)
         {
         case SDLK_UP:
+            break;
         case SDLK_DOWN:
-        case SDLK_RIGHT:
-        case SDLK_LEFT:
+
             Plane_unsetDirection(&animation->plane, e->key.keysym.sym);
             break;
         }
@@ -177,10 +241,19 @@ bool Animation_handleEvent(Animation *animation, SDL_Event *e)
 void Animation_update(Animation *animation, int framerate)
 {
     // Move ocean
-    Background_move(&animation->background, framerate);
+    Background_move(&animation->background, framerate, animation);
 
     // Move plane
     Plane_move(&animation->plane, animation->width, animation->height, framerate);
+
+    // Move shop
+    Obstacle_move(&animation->shop, animation->width, animation->height, framerate, animation);
+
+    // Move tower
+    Obstacle_move(&animation->tower, animation->width, animation->height, framerate, animation);
+
+    // Move jet
+    Obstacle_move(&animation->jet, animation->width, animation->height, framerate, animation);
 }
 
 void Animation_render(Animation *animation)
@@ -190,4 +263,13 @@ void Animation_render(Animation *animation)
 
     // Render plane
     Plane_render(animation->renderer, &animation->plane);
+
+    // Render shop
+    Obstacle_render(animation->renderer, &animation->shop);
+
+    // Render tower
+    Obstacle_render(animation->renderer, &animation->tower);
+
+    // Render jet
+    Obstacle_render(animation->renderer, &animation->jet);
 }

@@ -30,18 +30,11 @@
 
 #include "plane.h"
 
-bool Plane_load(SDL_Renderer *renderer, Plane *plane, const char *image, const char *shadow)
+bool Plane_load(SDL_Renderer *renderer, Plane *plane, const char *image)
 {
     // Load plane image
     if(!Image_load(renderer, &plane->image, image))
     {
-        return false;
-    }
-
-    // Load plane shadow
-    if(!Image_load(renderer, &plane->shadow, shadow))
-    {
-        Image_destroy(&plane->image);
         return false;
     }
 
@@ -51,40 +44,24 @@ bool Plane_load(SDL_Renderer *renderer, Plane *plane, const char *image, const c
 void Plane_destroy(Plane *plane)
 {
     Image_destroy(&plane->image);
-    Image_destroy(&plane->shadow);
 }
 
 void Plane_setX(Plane *plane, int x)
 {
     // Plane x coordinate
     plane->image.rect.x = x;
-
-    // Plane shadow x coordinate
-    plane->shadow.rect.x = plane->image.rect.x
-                            + (plane->image.rect.w - plane->shadow.rect.w) / 2
-                            + plane->shadowOffset.x;
 }
 
 void Plane_setY(Plane *plane, int y)
 {
     // Plane y coordinate
     plane->image.rect.y = y;
-
-    // Plane shadow y coordinate
-    plane->shadow.rect.y = plane->image.rect.y
-                            + (plane->image.rect.h - plane->shadow.rect.h) / 2
-                            + plane->shadowOffset.y;
 }
 
 void Plane_setCoordinates(Plane *plane, int x, int y)
 {
     Plane_setX(plane, x);
     Plane_setY(plane, y);
-}
-
-void Plane_moveX(Plane *plane, int x)
-{
-    Plane_setX(plane, plane->image.rect.x + x);
 }
 
 void Plane_moveY(Plane *plane, int y)
@@ -100,21 +77,10 @@ void Plane_setDirection(Plane *plane, SDL_Keycode keycode)
         plane->direction &= ~DIRECTION_DOWN;
         plane->direction |= DIRECTION_UP;
         break;
-
     case SDLK_DOWN:
-        plane->direction &= ~SDLK_UP;
-        plane->direction |= DIRECTION_DOWN;
-        break;
-
-    case SDLK_RIGHT:
-        plane->direction &= ~SDLK_LEFT;
-        plane->direction |= DIRECTION_RIGHT;
-        break;
-
-    case SDLK_LEFT:
-        plane->direction &= ~DIRECTION_RIGHT;
-        plane->direction |= DIRECTION_LEFT;
-        break;
+            plane->direction &= ~DIRECTION_UP;
+            plane->direction |= DIRECTION_DOWN;
+            break;
     }
 }
 
@@ -125,30 +91,19 @@ void Plane_unsetDirection(Plane *plane, SDL_Keycode keycode)
     case SDLK_UP:
         plane->direction &= ~DIRECTION_UP;
         break;
-
     case SDLK_DOWN:
-        plane->direction &= ~DIRECTION_DOWN;
-        break;
-
-    case SDLK_RIGHT:
-        plane->direction &= ~DIRECTION_RIGHT;
-        break;
-
-    case SDLK_LEFT:
-        plane->direction &= ~DIRECTION_LEFT;
-        break;
+            plane->direction &= ~DIRECTION_DOWN;
+            break;
     }
 }
 
 void Plane_render(SDL_Renderer *renderer, Plane *plane)
 {
-    // Render plane shadow
-    Image_render(renderer, &plane->shadow);
 
     // Render plane
     Image_render(renderer, &plane->image);
-}
 
+}
 void Plane_move(Plane *plane, int screenWidth, int screenHeight, int framerate)
 {
     int planeStep = plane->speed / framerate;
@@ -157,21 +112,16 @@ void Plane_move(Plane *plane, int screenWidth, int screenHeight, int framerate)
             && plane->image.rect.y - planeStep >= plane->margin)
     {
         Plane_moveY(plane, -planeStep);
+        if(plane->image.rect.y<30)
+        {
+
+          Plane_setDirection(plane, SDLK_DOWN);
+
+        }
     }
     else if( (plane->direction & DIRECTION_DOWN)
-             && plane->image.rect.y + plane->image.rect.h + planeStep <= screenHeight - plane->margin)
+             && plane->image.rect.y < (screenHeight - plane->image.rect.h)*94 / 100)
     {
         Plane_moveY(plane, planeStep);
-    }
-
-    if( (plane->direction & DIRECTION_RIGHT)
-            && plane->image.rect.x + plane->image.rect.w + planeStep <= screenWidth - plane->margin)
-    {
-        Plane_moveX(plane, planeStep);
-    }
-    else if( (plane->direction & DIRECTION_LEFT)
-             && plane->image.rect.x - planeStep >= plane->margin)
-    {
-        Plane_moveX(plane, -planeStep);
     }
 }
