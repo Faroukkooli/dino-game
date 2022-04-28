@@ -34,18 +34,27 @@
 #include "utils.h"
 #include "plane.h"
 #include "background.h"
+#include "obstacle1.h"
 
 
 #define PLANE_IMG       "assets/plane.png"
-#define PLANE_SPEED     250
+#define PLANE_SPEED     420
 #define PLANE_MARGIN    20
 
-#define PLANE_SHADOW    "assets/plane-shadow.png"
-#define PLANE_SHADOW_X  50
-#define PLANE_SHADOW_Y  10
+#define SHOP_IMG       "assets/shop.png"
+#define SHOP_SPEED     420
+#define SHOP_MARGIN    0
 
-#define OCEAN_IMG       "assets/ocean.jpg"
-#define OCEAN_SPEED     200
+#define TOWER_IMG       "assets/tower.png"
+#define TOWER_SPEED     420
+#define TOWER_MARGIN    0
+
+#define JET_IMG       "assets/jet.png"
+#define JET_SPEED     420
+#define JET_MARGIN    0
+
+#define OCEAN_IMG       "assets/ocean.png"
+#define OCEAN_SPEED     500
 
 struct Animation
 {
@@ -59,6 +68,11 @@ struct Animation
     // Background and Plane
     Background background;
     Plane plane;
+    Obstacle shop;
+    Obstacle tower;
+    Obstacle jet;
+
+    bool gameover;
 };
 typedef struct Animation Animation;
 

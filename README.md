@@ -1,7 +1,9 @@
-# Flying plane SDL2 animation
+# Dino Game Rip off
 
 This project is written in C and uses [CMake][] as a build system.<br>
-It shows how we can make a basic animation using [SDL2][SDL] : Flying plane.
+It shows how we can make a basic animation using [SDL2][SDL] : Dino Game.
+
+mention how to play:
 
 
 It could be used as a base for any SDL2 game. Just fork it, clone it and
@@ -19,57 +21,34 @@ repository.
 - [SDL2_image][] library
 - [SDL2_gfx][] library
 
-**On Debian/Ubuntu based distributions, use the following command:**
-
-```sh
-sudo apt install git build-essential pkg-config cmake cmake-data libsdl2-dev libsdl2-image-dev libsdl2-gfx-dev
-```
-
-**Optional packages:**
-
-- [SDL2_ttf][] library
-- [SDL2_net][] library
-- [SDL2_mixer][] library
-
-```sh
-sudo apt install libsdl2-ttf-dev libsdl2-net-dev libsdl2-mixer-dev
-```
 
 ## Build instructions
 
-```sh
-# Clone this repo
-git clone https://gitlab.com/aminosbh/flying-plane-sdl-animation.git
-cd flying-plane-sdl-animation
+[this BUILD] (BUILD.md)
 
-# Create a build folder
-mkdir build
-cd build
+## Contributing
+how to contribute
 
-# Build
-cmake ..
-make
+to-do list, things to improve
 
-# Run
-./flying-plane-sdl-animation
-```
-
-***Note:*** To use SDL2_ttf, SDL2_net or SDL2_mixer, you should uncomment some
-instructions in the CMakeLists.txt file and re-execute the `make` command.
-
-### Open the project with an IDE under Linux
-
-See [IDE_USAGE.md](IDE_USAGE.md) for details.
 
 ## License
 
-Author: Amine B. Hassouna [@aminosbh](https://gitlab.com/aminosbh)
+Developers: 
+- El Zubeir Huweidi (https://github.com/ZizouHuweidi)
+- Mohamed Ashraf Zohdi  (https://github.com/)
+-    (https://github.com/)
+-    (https://github.com/)
+
 
 This project is distributed under the terms of the MIT license
 [&lt;LICENSE&gt;](LICENSE).
 
+edit license to match our project
 
 The images under the assets directory are distributed under different licenses:
+
+change this to match our assests 
 
 - `plane.png` and `plane-shadow.png`:<br>
   Author: Amine B. Hassouna [@aminosbh](https://gitlab.com/aminosbh)<br>

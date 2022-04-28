@@ -34,6 +34,8 @@
 #include "utils.h"
 #include "image.h"
 
+typedef struct Animation Animation;
+
 struct Background
 {
     // Image
@@ -50,7 +52,7 @@ typedef struct Background Background;
 bool Background_load(SDL_Renderer *renderer, Background *background, const char *file);
 void Background_destroy(Background *background);
 
-void Background_move(Background *background, int framerate);
+void Background_move(Background *background, int framerate, Animation *animation);
 
 void Background_render(SDL_Renderer *renderer, Background *background, int width, int height);
 

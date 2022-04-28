@@ -39,10 +39,6 @@ struct Plane
     // Plane
     Image image;
 
-    // Shadow
-    Image shadow;
-    SDL_Point shadowOffset;
-
     // Direction
     Direction direction;
 
@@ -51,18 +47,20 @@ struct Plane
 
     // Margin
     int margin;
+
+    // Cropped
+    bool cropped;
 };
 typedef struct Plane Plane;
 
 
-bool Plane_load(SDL_Renderer *renderer, Plane *plane, const char *image, const char *shadow);
+bool Plane_load(SDL_Renderer *renderer, Plane *plane, const char *image);
 void Plane_destroy(Plane *plane);
 
 void Plane_setX(Plane *plane, int x);
 void Plane_setY(Plane *plane, int y);
 void Plane_setCoordinates(Plane *plane, int x, int y);
 
-void Plane_moveX(Plane *plane, int x);
 void Plane_moveY(Plane *plane, int y);
 
 void Plane_move(Plane *plane, int screenWidth, int screenHeight, int framerate);
