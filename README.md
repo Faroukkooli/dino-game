@@ -24,7 +24,7 @@ repository.
 
 ## Build instructions
 
-[&lt;BUILD&gt;](BUILD.MD)
+[BUILD](BUILD.md)
 
 ## Contributing
 how to contribute
