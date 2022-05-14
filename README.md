@@ -35,6 +35,7 @@ All contributions should be under the terms of the MIT license [&lt;LICENSE&gt;]
 Developers: 
 - El Zubeir Huweidi (https://github.com/ZizouHuweidi)
 - Mohamed Ashraf Zohdi (https://github.com/AshrafZohdi)
+- Mohamed Farouk Kooli (https://github.com/Faroukkooli)
 
 
 This project is distributed under the terms of the MIT license
